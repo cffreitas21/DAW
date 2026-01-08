@@ -2,17 +2,17 @@
 
 @section('content')
     <style>
-        {!! file_get_contents(resource_path('views/admin/admin.css')) !!}
+        {!! file_get_contents(resource_path('views/streamer/streamer.css')) !!}
     </style>
 
     <div class="top-bar-box">
         <div class="top-bar">
             <div class="name-topbar">
-                <button></button>
+                <button type="submit" class="nb-submit"
+                        onclick="window.location.href='{{ url('/homepage') }}'">
+                    Ver Filmes Recomendados</button>
             </div>
-
             <div class="top-bar-spacer" style="flex:1;"></div>
-
         </div>
     </div>
 

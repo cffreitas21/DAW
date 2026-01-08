@@ -11,12 +11,16 @@
                 </svg>
                 <span class="title">StreamBoltTV</span>
             </span>
-            <div class="top-bar-spacer"></div>
-            <span class="iconletter" aria-hidden="true">
-                {{ strtoupper(mb_substr($username ?? '', 0, 1)) ?: '?' }}
-            </span>
-            <span class="user-name">{{ $username ?? 'Guest' }}</span>
-            <button>Terminar Sessão</button>
+            @if(!empty(trim($username ?? '')))
+                    <span class="iconletter" aria-hidden="true">
+                    {{ strtoupper(mb_substr($username, 0, 1)) ?: '?' }}
+                     </span>
+                    <span class="user-name">{{ $username }}</span>
+                    <form method="POST" action="{{ route('logout') }}" style="display:inline;">
+                        @csrf
+                        <button type="submit">Terminar Sessão</button>
+                    </form>
+            @endif
         </div>
     </div>
 </header>
