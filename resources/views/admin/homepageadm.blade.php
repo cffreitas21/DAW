@@ -6,6 +6,7 @@
         {!! file_get_contents(resource_path('views/admin/admin.css')) !!}
     </style>
 
+    {{-- Barra superior com navegação e pesquisa --}}
     <div class="top-bar-box">
         <div class="top-bar">
             <div class="name-topbar">
@@ -20,6 +21,7 @@
 
             <div class="top-bar-spacer"></div>
 
+            {{-- Campo de pesquisa com autocomplete --}}
             <div class="search-container">
                 <input
                     id="search-input"
@@ -32,10 +34,19 @@
             </div>
         </div>
     </div>
+    
     <div class="center-title">
-        <h1>Aprovação de Avaliações</h1>
+        <h1>Aprovação de Comentários</h1>
     </div>
-    HOMEPAGE DO ADMIN
+
+    {{-- Lista de comentários pendentes para aprovação --}}
+    <div class="comments-approval-container">
+        <div class="loading-message" id="loadingMessage">A carregar comentários...</div>
+        <div class="empty-message" id="emptyMessage" style="display: none; text-align: center; padding: 20px;">Sem comentários para aprovar.</div>
+        
+        {{-- Esta div será preenchida dinamicamente com os comentários --}}
+        <ul class="comments-list-adm" id="commentsList"></ul>
+    </div>
 
     <script>
         // Pesquisa de filmes com autocomplete (igual ao streamer)
@@ -92,6 +103,126 @@
         document.addEventListener('click', function(e) {
             if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
                 searchDropdown.classList.remove('show');
+            }
+        });
+
+        // Carrega comentários pendentes de aprovação da API
+        async function loadPendingComments() {
+            const loadingMessage = document.getElementById('loadingMessage');
+            const emptyMessage = document.getElementById('emptyMessage');
+            const commentsList = document.getElementById('commentsList');
+            
+            try {
+                const response = await fetch('/api/comments/pending');
+                const comments = await response.json();
+                
+                loadingMessage.style.display = 'none';
+                
+                if (comments.length === 0) {
+                    emptyMessage.style.display = 'block';
+                    return;
+                }
+                
+                // Gera cards de comentários dinamicamente
+                commentsList.innerHTML = comments.map(comment => {
+                    const userName = comment.user ? comment.user.name : 'Utilizador';
+                    const movieTitle = comment.movie ? comment.movie.title : 'Filme';
+                    const posterPath = comment.movie && comment.movie.poster_path 
+                        ? `/storage/${comment.movie.poster_path}` 
+                        : '';
+                    const userInitial = userName.charAt(0).toUpperCase();
+                    
+                    return `
+                        <li class="comment-card-adm" data-comment-id="${comment.id}">
+                            <div class="comment-content-adm">
+                                <div class="comment-header-adm">
+                                    <div class="icon-letra">${userInitial}</div>
+                                    <div class="comment-user-info">
+                                        <div class="user-name-adm">${userName}</div>
+                                        <div class="movie-title-adm">${movieTitle}</div>
+                                    </div>
+                                </div>
+                                <div class="comment-text-adm">
+                                    ${comment.comment}
+                                </div>
+                                <div class="comment-actions-adm">
+                                    <select class="action-select-adm">
+                                        <option value="">Selecionar ação</option>
+                                        <option value="aprovar">Aprovar</option>
+                                        <option value="naoaprovar">Não Aprovar</option>
+                                    </select>
+                                    <button class="submit-btn-adm" onclick="handleCommentAction(${comment.id})">Submeter</button>
+                                </div>
+                            </div>
+                            ${posterPath ? `<img src="${posterPath}" alt="Poster" class="movie-poster-adm" />` : ''}
+                        </li>
+                    `;
+                }).join('');
+                
+            } catch (error) {
+                console.error('Erro ao carregar comentários:', error);
+                loadingMessage.textContent = 'Erro ao carregar comentários.';
+            }
+        }
+        
+        // Handler para aprovar/rejeitar comentário
+        async function handleCommentAction(commentId) {
+            const card = document.querySelector(`[data-comment-id="${commentId}"]`);
+            const select = card.querySelector('.action-select-adm');
+            const action = select.value;
+            
+            if (!action) {
+                alert('Por favor, selecione uma ação.');
+                return;
+            }
+            
+            const endpoint = action === 'aprovar' 
+                ? `/api/comments/${commentId}/approve` 
+                : `/api/comments/${commentId}/reject`;
+            
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    credentials: 'same-origin'
+                });
+                
+                if (response.ok) {
+                    card.remove();
+                    
+                    // Verifica se ainda há comentários
+                    const remainingComments = document.querySelectorAll('.comment-card-adm');
+                    if (remainingComments.length === 0) {
+                        document.getElementById('emptyMessage').style.display = 'block';
+                    }
+                } else {
+                    const data = await response.json();
+                    alert('Erro: ' + (data.message || 'Erro ao processar ação'));
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao conectar com o servidor');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPendingComments();
+        });
+
+        // Handler para mudança de seleção no dropdown de ações
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('action-select-adm')) {
+                const button = e.target.nextElementSibling;
+                button.className = 'submit-btn-adm';
+                
+                if (e.target.value === 'aprovar') {
+                    button.classList.add('approve-adm');
+                } else if (e.target.value === 'naoaprovar') {
+                    button.classList.add('reject-adm');
+                }
             }
         });
     </script>

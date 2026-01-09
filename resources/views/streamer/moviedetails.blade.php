@@ -139,40 +139,81 @@
             `;
         }
 
-        // Submete novo comentário (placeholder - endpoint ainda não implementado)
-        function submitComment(event) {
+        // Submete novo comentário para aprovação via API
+        async function submitComment(event) {
             event.preventDefault();
             
             const textarea = document.getElementById('comment-textarea');
             const message = document.getElementById('comment-message');
+            const movieId = new URLSearchParams(window.location.search).get('id');
             
-            // Quando o endpoint estiver pronto:
-            // const movieId = new URLSearchParams(window.location.search).get('id');
-            // fetch('/api/comments', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({
-            //         movie_id: movieId,
-            //         comment: textarea.value
-            //     })
-            // });
+            if (!textarea.value.trim()) {
+                message.style.color = 'red';
+                message.textContent = 'Por favor, escreva um comentário.';
+                return;
+            }
             
-            message.textContent = 'Comentário enviado com sucesso!';
-            textarea.value = '';
+            try {
+                const response = await fetch('/api/comments', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({
+                        movie_id: movieId,
+                        comment: textarea.value
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    message.style.color = 'green';
+                    message.textContent = 'Comentário enviado para aprovação!';
+                    textarea.value = '';
+                } else {
+                    message.style.color = 'red';
+                    message.textContent = 'Erro: ' + (data.message || 'Erro ao enviar comentário');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                message.style.color = 'red';
+                message.textContent = 'Erro ao conectar com o servidor';
+            }
             
             setTimeout(() => {
                 message.textContent = '';
-            }, 3000);
+            }, 5000);
         }
 
-        // Apaga comentário (placeholder - endpoint ainda não implementado)
-        function deleteComment(commentId) {
+        // Apaga comentário do próprio utilizador via API DELETE
+        async function deleteComment(commentId) {
             if (confirm('Tem certeza que deseja apagar este comentário?')) {
-                // Quando o endpoint estiver pronto:
-                // fetch(`/api/comments/${commentId}`, { method: 'DELETE' });
-                
-                alert('Comentário apagado!');
-                location.reload();
+                try {
+                    const response = await fetch(`/api/comments/${commentId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        credentials: 'same-origin'
+                    });
+                    
+                    if (response.ok) {
+                        alert('Comentário apagado com sucesso');
+                        location.reload(); // Recarrega a página para atualizar a lista
+                    } else {
+                        const data = await response.json();
+                        alert('Erro: ' + (data.message || 'Erro ao apagar comentário'));
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Erro ao conectar com o servidor');
+                }
             }
         }
     </script>

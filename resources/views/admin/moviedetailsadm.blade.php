@@ -15,7 +15,7 @@
                     Adicionar Filme</button>
                 <button type="submit" class="nb-submit"
                         onclick="window.location.href='{{ url('/homepageadm') }}'">
-                    Aprovação de Avaliações</button>
+                    Aprovação de Comentários</button>
                 <button type="submit" class="nb-submit"
                         onclick="window.location.href='{{ url('/analytics') }}'">
                     Estatísticas</button>
@@ -150,10 +150,31 @@
             }
         }
 
-        function deleteComment(commentId) {
+        // Apaga comentário via API DELETE
+        async function deleteComment(commentId) {
             if (confirm('Tem certeza que deseja apagar este comentário?')) {
-                alert('Funcionalidade em desenvolvimento');
-                // TODO: Implementar delete do comentário
+                try {
+                    const response = await fetch(`/api/comments/${commentId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        credentials: 'same-origin'
+                    });
+                    
+                    if (response.ok) {
+                        alert('Comentário apagado com sucesso');
+                        location.reload(); // Recarrega a página para atualizar a lista
+                    } else {
+                        const data = await response.json();
+                        alert('Erro: ' + (data.message || 'Erro ao apagar comentário'));
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Erro ao conectar com o servidor');
+                }
             }
         }
     </script>

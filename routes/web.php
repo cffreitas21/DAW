@@ -39,5 +39,18 @@ Route::middleware(['auth', 'streamer'])->group(function () {
 
 Route::get('/loginstreamer', [StreamerController::class, 'loginstreamer'])->name('loginstreamer');
 
+// Comment API routes (autenticadas)
+use App\Http\Controllers\Api\CommentController;
+
+Route::middleware('auth')->group(function () {
+    Route::post('/api/comments', [CommentController::class, 'store']);
+    Route::delete('/api/comments/{id}', [CommentController::class, 'destroy']);
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/api/comments/pending', [CommentController::class, 'pending']);
+    Route::post('/api/comments/{id}/approve', [CommentController::class, 'approve']);
+    Route::post('/api/comments/{id}/reject', [CommentController::class, 'reject']);
+});
 
 require __DIR__ . '/auth.php';

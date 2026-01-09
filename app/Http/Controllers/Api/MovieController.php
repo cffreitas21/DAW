@@ -7,6 +7,7 @@ use App\Models\Movie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Helpers\AnalyticsHelper;
 
 class MovieController extends Controller
 {
@@ -30,6 +31,15 @@ class MovieController extends Controller
         
         if (empty($query)) {
             return response()->json([]);
+        }
+        
+        // Regista pesquisa no analytics se utilizador autenticado
+        if (auth()->check() && auth()->user()->isStreamer()) {
+            AnalyticsHelper::trackSearch(
+                auth()->id(),
+                auth()->user()->name,
+                $query
+            );
         }
         
         $movies = Movie::where('title', 'LIKE', "%{$query}%")
@@ -78,11 +88,17 @@ class MovieController extends Controller
 
     /**
      * GET /api/movies/{id}
-     * Retorna detalhes do filme com comentários
+     * Retorna detalhes do filme com comentários (apenas aprovados para streamers)
      */
     public function show(string $id)
     {
-        $movie = Movie::with('comments')->find($id);
+        $movie = Movie::with(['comments' => function($query) {
+            // Admins veem todos os comentários, streamers apenas os aprovados
+            if (!auth()->check() || !auth()->user()->isAdmin()) {
+                $query->where('approved', true);
+            }
+            $query->with('user')->latest();
+        }])->find($id);
         
         if (!$movie) {
             return response()->json(['message' => 'Movie not found'], 404);

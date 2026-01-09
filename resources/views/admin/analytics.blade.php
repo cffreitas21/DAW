@@ -14,7 +14,7 @@
                     Adicionar Filme</button>
                 <button type="submit" class="nb-submit"
                         onclick="window.location.href='{{ url('/homepageadm') }}'">
-                    Aprovação de Avaliações</button>
+                    Aprovação de Comentários</button>
                 <button type="submit" class="nb-submit"
                         onclick="window.location.href='{{ url('/analytics') }}'">
                     Estatísticas</button>
