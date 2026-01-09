@@ -6,24 +6,31 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-
+    // Retorna a vista de login do admin
     public function loginadm()
     {
         return view('admin.loginadm');
     }
+
+    // Retorna a vista homepage do admin
     public function homepageadm()
     {
         return view('admin.homepageadm');
     }
+
+    // Retorna a vista de detalhes do filme para admin
     public function moviedetailsadm()
     {
         return view('admin.moviedetailsadm');
     }
+
+    // Retorna a vista para adicionar filme
     public function addmovie()
     {
         return view('admin.addmovie');
     }
 
+    // Processa e exibe estatísticas de utilizadores streamers
     public function analytics()
     {
         // Read analytics data from JSON file

@@ -1,3 +1,4 @@
+{{-- Vista: Detalhes do Filme (Streamer) - Informações do filme e comentários --}}
 @extends('layouts.app')
 
 @section('content')
@@ -21,8 +22,10 @@
     </main>
 
     <script>
+        // Carrega detalhes do filme ao iniciar página
         document.addEventListener('DOMContentLoaded', async function() {
             const mainContent = document.getElementById('mainContent');
+            // Extraí ID do filme da URL
             const urlParams = new URLSearchParams(window.location.search);
             const movieId = urlParams.get('id');
 
@@ -32,6 +35,7 @@
             }
 
             try {
+                // Busca detalhes do filme e comentários da API
                 const response = await fetch(`/api/movies/${movieId}`);
                 
                 console.log('Response status:', response.status);
@@ -55,6 +59,7 @@
             }
         });
 
+        // Renderiza informações do filme e comentários no DOM
         function renderMovieDetails(movie, comments) {
             const mainContent = document.getElementById('mainContent');
             const currentUserId = {{ auth()->id() }};
@@ -63,11 +68,13 @@
                 ? `<img class="movie-poster" src="/storage/${movie.poster_path}" alt="${movie.title}">`
                 : `<div class="no-poster">No Image</div>`;
 
+            // Converte rating numérico em estrelas (1-5)
             const voteAverage = parseFloat(movie.vote_average) || 0;
             const stars = Array.from({ length: 5 }, (_, i) => 
                 voteAverage / 2 >= i + 1 ? '★' : '☆'
             ).join('');
 
+            // Gera HTML dos comentários com botão de delete para o autor
             const commentsHTML = comments.map(c => `
                 <div class="review-card">
                     <div class="review-header">
@@ -132,6 +139,7 @@
             `;
         }
 
+        // Submete novo comentário (placeholder - endpoint ainda não implementado)
         function submitComment(event) {
             event.preventDefault();
             
@@ -157,6 +165,7 @@
             }, 3000);
         }
 
+        // Apaga comentário (placeholder - endpoint ainda não implementado)
         function deleteComment(commentId) {
             if (confirm('Tem certeza que deseja apagar este comentário?')) {
                 // Quando o endpoint estiver pronto:

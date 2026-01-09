@@ -1,3 +1,4 @@
+{{-- Vista: Homepage do Admin - Aprovação de avaliações com pesquisa --}}
 @extends('layouts.app')
 
 @section('content')
@@ -37,10 +38,12 @@
     HOMEPAGE DO ADMIN
 
     <script>
+        // Pesquisa de filmes com autocomplete (igual ao streamer)
         const searchInput = document.getElementById('search-input');
         const searchDropdown = document.getElementById('search-dropdown');
         let searchTimeout;
 
+        // Debounce de 300ms para evitar chamadas excessivas à API
         searchInput.addEventListener('input', function(e) {
             const query = e.target.value.trim();
             
@@ -63,6 +66,7 @@
                         return;
                     }
                     
+                    // Resultados redirecionam para moviedetailsadm
                     const resultsHTML = movies.map(movie => {
                         const posterHTML = movie.poster_path 
                             ? `<img src="/storage/${movie.poster_path}" alt="${movie.title}" class="search-result-poster">`

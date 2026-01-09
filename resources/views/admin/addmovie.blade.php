@@ -1,3 +1,4 @@
+{{-- Vista: Adicionar Filme - Formulário para criar novo filme via API --}}
 @extends('layouts.app')
 
 @section('content')
@@ -20,6 +21,7 @@
         </div>
     </div>
 
+    {{-- Formulário de adição de filme --}}
     <div class="form-container">
         <h2 class="form-title">Adicionar Filme</h2>
         
@@ -134,9 +136,11 @@
     </div>
 
     <script>
+        // Submete formulário de adição de filme via API
         document.getElementById('addMovieForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            // Prepara dados do formulário incluindo ficheiro de poster
             const formData = new FormData();
             formData.append('title', document.getElementById('title').value);
             formData.append('release_date', document.getElementById('release_date').value);
@@ -153,6 +157,7 @@
             const messageDiv = document.getElementById('message');
             
             try {
+                // Envia dados para API de criação de filme
                 const response = await fetch('/api/movies', {
                     method: 'POST',
                     body: formData,
@@ -163,6 +168,7 @@
                 
                 const data = await response.json();
                 
+                // Exibe mensagem de sucesso ou erro
                 if (response.ok) {
                     messageDiv.style.display = 'block';
                     messageDiv.style.background = '#d4edda';

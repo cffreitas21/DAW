@@ -1,3 +1,4 @@
+{{-- Vista: Detalhes do Filme (Admin) - Visualização e gestão de filme e comentários --}}
 @extends('layouts.app')
 
 @section('content')
@@ -29,6 +30,7 @@
     </main>
 
     <script>
+        // Carrega detalhes do filme para gestão admin
         document.addEventListener('DOMContentLoaded', async function() {
             const mainContent = document.getElementById('mainContent');
             const urlParams = new URLSearchParams(window.location.search);
@@ -57,6 +59,7 @@
             }
         });
 
+        // Renderiza detalhes do filme com botão de delete
         function renderMovieDetails(movie, comments) {
             const mainContent = document.getElementById('mainContent');
             
@@ -69,6 +72,7 @@
                 voteAverage / 2 >= i + 1 ? '★' : '☆'
             ).join('');
 
+            // Todos os comentários têm botão de delete (admin)
             const commentsHTML = comments.map(c => `
                 <div class="review-card">
                     <div class="review-header">
@@ -116,8 +120,10 @@
             `;
         }
 
+        // Apaga filme via API DELETE e redireciona para homepage
         function deleteMovie(movieId) {
             if (confirm('Tem certeza que deseja apagar este filme? Esta ação não pode ser desfeita.')) {
+                // Chama endpoint DELETE /api/movies/{id}
                 fetch(`/api/movies/${movieId}`, {
                     method: 'DELETE',
                     headers: {

@@ -16,6 +16,7 @@ class Movie extends Model
         'overview',
     ];
 
+    // Relação: filme tem muitos comentários
     public function comments()
     {
         return $this->hasMany(Comment::class);

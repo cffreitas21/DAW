@@ -17,11 +17,13 @@ class Comment extends Model
         'approved' => 'boolean',
     ];
 
+    // Relação: comentário pertence a um utilizador
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    // Relação: comentário pertence a um filme
     public function movie()
     {
         return $this->belongsTo(Movie::class);

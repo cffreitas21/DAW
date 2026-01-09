@@ -12,7 +12,7 @@ class MovieController extends Controller
 {
     /**
      * GET /api/movies
-     * Display a listing of the resource.
+     * Retorna lista de todos os filmes
      */
     public function index()
     {
@@ -22,7 +22,7 @@ class MovieController extends Controller
 
     /**
      * GET /api/movies/search?q={query}
-     * Search movies by title.
+     * Pesquisa filmes por título (máximo 5 resultados)
      */
     public function search(Request $request)
     {
@@ -42,7 +42,7 @@ class MovieController extends Controller
 
     /**
      * POST /api/movies
-     * Store a newly created resource in storage.
+     * Cria novo filme com upload de poster
      */
     public function store(Request $request)
     {
@@ -78,7 +78,7 @@ class MovieController extends Controller
 
     /**
      * GET /api/movies/{id}
-     * Display the specified resource.
+     * Retorna detalhes do filme com comentários
      */
     public function show(string $id)
     {
@@ -93,7 +93,7 @@ class MovieController extends Controller
 
     /**
      * PUT/PATCH /api/movies/{id}
-     * Update the specified resource in storage.
+     * Atualiza informações do filme
      */
     public function update(Request $request, string $id)
     {
@@ -102,7 +102,7 @@ class MovieController extends Controller
 
     /**
      * DELETE /api/movies/{id}
-     * Remove the specified resource from storage.
+     * Apaga filme e poster do storage
      */
     public function destroy(string $id)
     {

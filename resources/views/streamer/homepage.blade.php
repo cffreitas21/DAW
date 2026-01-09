@@ -1,3 +1,4 @@
+{{-- Vista: Homepage do Streamer - Lista de filmes com pesquisa autocomplete --}}
 @extends('layouts.app')
 
 @section('content')
@@ -5,10 +6,12 @@
         {!! file_get_contents(resource_path('views/streamer/streamer.css')) !!}
     </style>
 
+    {{-- Barra superior com pesquisa --}}
     <div class="top-bar-box">
         <div class="top-bar">
             <div class="name-topbar"></div>
             <div class="top-bar-spacer"></div>
+            {{-- Campo de pesquisa com autocomplete --}}
             <div class="search-container">
                 <input
                     id="search-input"
@@ -25,6 +28,7 @@
         <h1>Filmes Recomendados</h1>
     </div>
 
+    {{-- Container onde os filmes são carregados dinamicamente --}}
     <div class="movies-container" id="moviesGrid">
         <div class="loading">A carregar filmes...</div>
     </div>
@@ -34,7 +38,7 @@
         const searchInput = document.getElementById('search-input');
         const searchDropdown = document.getElementById('search-dropdown');
 
-        // Search functionality
+        // Funcionalidade de pesquisa com debounce de 300ms
         searchInput.addEventListener('input', function(e) {
             const query = e.target.value.trim();
             
@@ -48,6 +52,7 @@
             
             searchTimeout = setTimeout(async () => {
                 try {
+                    // Chama API de pesquisa com query string
                     const response = await fetch(`/api/movies/search?q=${encodeURIComponent(query)}`);
                     const movies = await response.json();
                     
@@ -57,6 +62,7 @@
                         return;
                     }
                     
+                    // Constrói HTML dos resultados da pesquisa
                     const resultsHTML = movies.map(movie => {
                         const posterHTML = movie.poster_path 
                             ? `<img src="/storage/${movie.poster_path}" alt="${movie.title}" class="search-result-poster">`
@@ -79,18 +85,19 @@
             }, 300);
         });
 
-        // Close dropdown when clicking outside
+        // Fecha dropdown ao clicar fora
         document.addEventListener('click', function(e) {
             if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
                 searchDropdown.classList.remove('show');
             }
         });
 
-        // Load movies
+        // Carrega todos os filmes ao carregar a página
         document.addEventListener('DOMContentLoaded', async function() {
             const moviesGrid = document.getElementById('moviesGrid');
             
             try {
+                // Busca lista completa de filmes da API
                 const response = await fetch('/api/movies');
                 
                 if (!response.ok) {
@@ -104,6 +111,7 @@
                     return;
                 }
                 
+                // Gera HTML dos cartões de filmes
                 const gridHTML = movies.map(movie => {
                     const posterHTML = movie.poster_path 
                         ? `<img src="/storage/${movie.poster_path}" alt="${movie.title}">`

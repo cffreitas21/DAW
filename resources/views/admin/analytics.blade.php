@@ -1,3 +1,4 @@
+{{-- Vista: Estatísticas - Dashboard com métricas de utilizadores streamers --}}
 @extends('layouts.app')
 
 @section('content')

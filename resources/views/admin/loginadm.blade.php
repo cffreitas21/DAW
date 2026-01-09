@@ -1,3 +1,4 @@
+{{-- Vista: Login do Administrador - Página de autenticação --}}
 @extends('layouts.app')
 
 @section('content')

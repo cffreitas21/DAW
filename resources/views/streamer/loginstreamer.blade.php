@@ -1,3 +1,4 @@
+{{-- Vista: Login do Streamer - Página de autenticação --}}
 @extends('layouts.app')
 
 @section('content')

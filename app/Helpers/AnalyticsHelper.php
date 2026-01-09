@@ -6,6 +6,7 @@ class AnalyticsHelper
 {
     protected static $filePath;
 
+    // Retorna o caminho do ficheiro JSON de analytics
     protected static function getFilePath()
     {
         if (!self::$filePath) {
@@ -14,6 +15,7 @@ class AnalyticsHelper
         return self::$filePath;
     }
 
+    // Lê os dados do ficheiro analytics.json
     protected static function readData()
     {
         $file = self::getFilePath();
@@ -26,11 +28,13 @@ class AnalyticsHelper
         return json_decode(file_get_contents($file), true) ?? [];
     }
 
+    // Escreve dados no ficheiro analytics.json
     protected static function writeData($data)
     {
         file_put_contents(self::getFilePath(), json_encode($data, JSON_PRETTY_PRINT));
     }
 
+    // Regista login de utilizador
     public static function trackLogin($userId, $userName)
     {
         $data = self::readData();
@@ -45,6 +49,7 @@ class AnalyticsHelper
         self::writeData($data);
     }
 
+    // Regista pesquisa feita por utilizador
     public static function trackSearch($userId, $userName, $query = null)
     {
         $data = self::readData();
@@ -60,6 +65,7 @@ class AnalyticsHelper
         self::writeData($data);
     }
 
+    // Regista comentário adicionado por utilizador
     public static function trackComment($userId, $userName)
     {
         $data = self::readData();
@@ -74,6 +80,7 @@ class AnalyticsHelper
         self::writeData($data);
     }
 
+    // Regista tempo passado por utilizador na aplicação
     public static function trackTime($userId, $userName, $duration)
     {
         $data = self::readData();
