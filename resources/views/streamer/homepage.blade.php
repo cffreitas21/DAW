@@ -44,7 +44,7 @@
             
             clearTimeout(searchTimeout);
             
-            if (query.length < 2) {
+            if (query.length < 1) {
                 searchDropdown.classList.remove('show');
                 searchDropdown.innerHTML = '';
                 return;
