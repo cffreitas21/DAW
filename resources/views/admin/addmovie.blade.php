@@ -91,27 +91,7 @@
                     required
                     aria-label="Selecionar Género"
                 >
-                    <option value="" disabled selected>Seleccionar Género</option>
-                    <option value="Ação">Ação</option>
-                    <option value="Aventura">Aventura</option>
-                    <option value="Animação">Animação</option>
-                    <option value="Comédia">Comédia</option>
-                    <option value="Crime">Crime</option>
-                    <option value="Documentário">Documentário</option>
-                    <option value="Drama">Drama</option>
-                    <option value="Drama">Drama e Crime</option>
-                    <option value="Família">Família</option>
-                    <option value="Fantasia">Fantasia</option>
-                    <option value="História">História</option>
-                    <option value="Terror">Terror</option>
-                    <option value="Música">Música</option>
-                    <option value="Mistério">Mistério</option>
-                    <option value="Romance">Romance</option>
-                    <option value="Ficção Científica">Ficção Científica</option>
-                    <option value="Cinema TV">Cinema TV</option>
-                    <option value="Thriller">Thriller</option>
-                    <option value="Guerra">Guerra</option>
-                    <option value="Western">Western</option>
+                    <option value="" disabled selected>A carregar géneros...</option>
                 </select>
             </div>
 
@@ -199,6 +179,28 @@
         document.addEventListener('click', function(e) {
             if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
                 searchDropdown.classList.remove('show');
+            }
+        });
+
+        // Carrega géneros da API ao carregar a página
+        document.addEventListener('DOMContentLoaded', async function() {
+            const genreSelect = document.getElementById('genre_ids');
+            
+            try {
+                const response = await fetch('/api/genres');
+                const genres = await response.json();
+                
+                genreSelect.innerHTML = '<option value="" disabled selected>Selecionar Género</option>';
+                
+                genres.forEach(genre => {
+                    const option = document.createElement('option');
+                    option.value = genre.name;
+                    option.textContent = genre.name;
+                    genreSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar géneros:', error);
+                genreSelect.innerHTML = '<option value="" disabled selected>Erro ao carregar géneros</option>';
             }
         });
 

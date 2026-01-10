@@ -123,6 +123,43 @@
     color: black;
 }
 
+/* Filtros de Género e Ano */
+.filters-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    margin: 10px auto;
+    max-width: 800px;
+}
+
+.filter-select {
+    padding: 10px 16px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #333;
+    min-width: 180px;
+}
+
+.filter-clear-btn {
+    padding: 10px 20px;
+    border: none;
+    background: dodgerblue;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: white;
+}
+
+.filter-clear-btn:hover {
+    filter: brightness(0.98);
+}
+
 
 
     /* login */
