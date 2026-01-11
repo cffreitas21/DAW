@@ -37,7 +37,7 @@
     </div>
    
     <div class="center-title">
-        <h1>Estatísticas dos Streamers</h1>
+        <h1>Análise da Atividade dos Utilizadores</h1>
     </div>
     
     <div class="analytics-container">
@@ -68,7 +68,7 @@
                     @empty
                         <tr>
                             <td colspan="7" class="analytics-empty-state">
-                                Nenhum dado de streamers disponível
+                                Nenhum dado de cinéfilos disponível
                             </td>
                         </tr>
                     @endforelse

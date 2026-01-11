@@ -17,7 +17,7 @@
                     Aprovação de Comentários</button>
                 <button type="submit" class="nb-submit"
                         onclick="window.location.href='{{ url('/analytics') }}'">
-                    Estatísticas</button>
+                    Análise da Atividade dos Utilizadores</button>
             </div>
 
             <div class="top-bar-spacer"></div>
