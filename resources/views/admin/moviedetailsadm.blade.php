@@ -187,12 +187,13 @@
         // Apaga filme via API DELETE e redireciona para homepage
         function deleteMovie(movieId) {
             if (confirm('Tem certeza que deseja apagar este filme? Esta ação não pode ser desfeita.')) {
-                // Chama endpoint DELETE /api/movies/{id}
-                fetch(`/api/movies/${movieId}`, {
+                // Chama endpoint DELETE /movies/{id}
+                fetch(`/movies/${movieId}`, {
                     method: 'DELETE',
                     headers: {
                         'Accept': 'application/json',
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     }
                 })
                 .then(response => {
@@ -218,7 +219,7 @@
         async function deleteComment(commentId) {
             if (confirm('Tem certeza que deseja apagar este comentário?')) {
                 try {
-                    const response = await fetch(`/api/comments/${commentId}`, {
+                    const response = await fetch(`/comments/${commentId}`, {
                         method: 'DELETE',
                         headers: {
                             'Accept': 'application/json',

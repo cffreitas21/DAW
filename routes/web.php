@@ -29,6 +29,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/moviedetailsadm', [AdminController::class, 'moviedetailsadm'])->name('moviedetailsadm'); // Detalhes de filme admin
     Route::get('/addmovie', [AdminController::class, 'addmovie'])->name('addmovie'); // Formulário adicionar filme
     Route::get('/analytics', [AdminController::class, 'analytics'])->name('analytics'); // Estatísticas de utilizadores
+    
+    // Gestão de filmes (web)
+    Route::post('/movies', [\App\Http\Controllers\Api\MovieController::class, 'store']); // Criar filme
+    Route::delete('/movies/{id}', [\App\Http\Controllers\Api\MovieController::class, 'destroy']); // Apagar filme
 });
 
 // Rotas de Streamer - protegidas por middleware auth e streamer
@@ -40,20 +44,19 @@ Route::middleware(['auth', 'streamer'])->group(function () {
 
 Route::get('/loginstreamer', [StreamerController::class, 'loginstreamer'])->name('loginstreamer'); // Login streamer (rota pública)
 
-// Rotas API de Comentários - autenticadas
+// Rotas de Comentários para utilizadores autenticados (via web)
 use App\Http\Controllers\Api\CommentController;
 
-// Rotas de comentários para utilizadores autenticados
 Route::middleware('auth')->group(function () {
-    Route::post('/api/comments', [CommentController::class, 'store']); // Criar comentário
-    Route::delete('/api/comments/{id}', [CommentController::class, 'destroy']); // Apagar comentário próprio
+    Route::post('/comments', [CommentController::class, 'store']); // Criar comentário (web)
+    Route::delete('/comments/{id}', [CommentController::class, 'destroy']); // Apagar comentário próprio (web)
 });
 
-// Rotas de gestão de comentários para administradores
+// Rotas de gestão de comentários para administradores (via web)
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/api/comments/pending', [CommentController::class, 'pending']); // Listar comentários pendentes
-    Route::post('/api/comments/{id}/approve', [CommentController::class, 'approve']); // Aprovar comentário
-    Route::post('/api/comments/{id}/reject', [CommentController::class, 'reject']); // Rejeitar comentário
+    Route::get('/comments/pending', [CommentController::class, 'pending']); // Listar comentários pendentes
+    Route::post('/comments/{id}/approve', [CommentController::class, 'approve']); // Aprovar comentário
+    Route::post('/comments/{id}/reject', [CommentController::class, 'reject']); // Rejeitar comentário
 });
 
 // Importa rotas de autenticação do Laravel Breeze

@@ -16,6 +16,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\CheckAdmin::class,
             'streamer' => \App\Http\Middleware\CheckStreamer::class,
         ]);
+        
+        // Configurar middleware CSRF para excluir rotas API
+        $middleware->validateCsrfTokens(except: [
+            'api/*',
+            '/track-time',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

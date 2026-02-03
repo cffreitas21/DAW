@@ -35,12 +35,12 @@ class AuthenticatedSessionController extends Controller
             AnalyticsHelper::trackLogin($user->id, $user->name);
         }
 
-        // Redirect based on user role
+        // Redirect based on user role (sempre para homepage do role)
         if ($user->isAdmin()) {
-            return redirect()->intended(route('homepageadm', absolute: false));
+            return redirect()->route('homepageadm');
         }
         
-        return redirect()->intended(route('homepage', absolute: false));
+        return redirect()->route('homepage');
     }
 
     /**

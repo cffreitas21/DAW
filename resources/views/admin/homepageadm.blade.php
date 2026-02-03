@@ -113,7 +113,7 @@
             const commentsList = document.getElementById('commentsList');
             
             try {
-                const response = await fetch('/api/comments/pending');
+                const response = await fetch('/comments/pending');
                 const comments = await response.json();
                 
                 loadingMessage.style.display = 'none';
@@ -177,8 +177,8 @@
             }
             
             const endpoint = action === 'aprovar' 
-                ? `/api/comments/${commentId}/approve` 
-                : `/api/comments/${commentId}/reject`;
+                ? `/comments/${commentId}/approve` 
+                : `/comments/${commentId}/reject`;
             
             try {
                 const response = await fetch(endpoint, {

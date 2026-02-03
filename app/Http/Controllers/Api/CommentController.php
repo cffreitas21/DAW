@@ -12,6 +12,11 @@ class CommentController extends Controller
     // Retorna lista de comentários pendentes para aprovação (admin)
     public function pending()
     {
+        // Verifica se o utilizador é admin
+        if (auth()->user()->role !== 'admin') {
+            return response()->json(['message' => 'Não autorizado'], 403);
+        }
+        
         $comments = Comment::with(['user', 'movie'])
             ->where('approved', false)
             ->latest()
@@ -85,6 +90,11 @@ class CommentController extends Controller
     // Aprova um comentário (admin)
     public function approve($id)
     {
+        // Verifica se o utilizador é admin
+        if (auth()->user()->role !== 'admin') {
+            return response()->json(['message' => 'Não autorizado'], 403);
+        }
+        
         $comment = Comment::find($id);
         
         if (!$comment) {
@@ -104,6 +114,11 @@ class CommentController extends Controller
     // Rejeita/apaga um comentário (admin)
     public function reject($id)
     {
+        // Verifica se o utilizador é admin
+        if (auth()->user()->role !== 'admin') {
+            return response()->json(['message' => 'Não autorizado'], 403);
+        }
+        
         $comment = Comment::find($id);
         
         if (!$comment) {

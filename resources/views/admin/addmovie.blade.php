@@ -226,7 +226,7 @@
             
             try {
                 // Envia dados para API de criação de filme
-                const response = await fetch('/api/movies', {
+                const response = await fetch('/movies', {
                     method: 'POST',
                     body: formData,
                     headers: {
